@@ -1,28 +1,30 @@
 var models = require('../models/models.js');
 
-exports.question = function(req, res){
-models.Quiz.find(req.params.quizId).then(function(quiz) {
-      res.render('quizes/question', { pregunta: quiz.pregunta})
-      //console.log('quiz.pregunta');
-      //console.log(quiz.pregunta);
-     // console.log("quiz.id " + quiz[{pregunta}]);
-
+exports.show = function(req, res){
+models.Quiz.findById(req.params.quizId).then(function(quiz) {
+		res.render('quizes/show', { quiz: quiz})
+	    //console.log('quiz =' +  quiz);	
+//      res.render('quizes/question', { pregunta: quiz.pregunta})
     })
 };
 
+
+
 exports.answer = function(req, res){
-	models.Quiz.find(req.params.quizId).then(
+	models.Quiz.findById(req.params.quizId).then(
 	function(quiz) {
 	 if(req.query.respuesta===quiz.respuesta){
-	 	res.render('quizes/answer',{respuesta: 'Correcto'});
+	 	res.render('quizes/answer',{quiz: quiz, respuesta: 'Correcto'});
 	 }
 	 else{
-	 	res.render('quizes/answer',{respuesta: 'Incorrecto'});
+	 	res.render('quizes/answer',{quiz: quiz, respuesta: 'Incorrecto'});
 	 	//console.log('req.query.respuesta' +  req.query.respuesta);
-	 	//console.log('quiz' + quiz);
-		//console.log(req.query.respuesta);
-		//console.log('quiz.respuesta');
-		//console.log(quiz.respuesta);
 	 }
+	})
+};
+
+exports.index = function(req, res) {
+	models.Quiz.findAll().then(function(quizes){
+		res.render('quizes/index.ejs', { quizes: quizes})
 	})
 };
