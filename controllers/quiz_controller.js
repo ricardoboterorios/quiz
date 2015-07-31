@@ -12,6 +12,34 @@ exports.load = function(req, res, next, quizId) {
   ).catch(function(error){next(error)});
 };
 
+
+
+exports.edit = function(req,res){   
+  var quiz = req.quiz;
+  res.render('quizes/edit', {quiz: quiz,errors:[]});
+};
+
+exports.update = function(req,res){   
+  req.quiz.pregunta = req.body.quiz.pregunta;
+  req.quiz.respuesta = req.body.quiz.respuesta;
+  
+  req.quiz
+  .validate()
+  .then(
+    function(error){
+      if(error){
+        res.render('quizes/edit',{
+          quiz: req.quiz, 
+          errors: error.errors})
+      }else{
+        req.quiz
+        .save({fields: ["pregunta","respuesta","tema"]})
+        .then(function(){ res.redirect('/quizes'); })
+      }
+    } 
+  );  
+};
+
 // GET /quizes
 exports.index = function(req, res) {
   if(req.query.search){
@@ -79,3 +107,5 @@ exports.create = function(req, res) {
     }
   );
 };
+
+
